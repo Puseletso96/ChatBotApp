@@ -1,10 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ChatBotApp
+namespace CyberChatbot
 {
-    internal class AudioPlayer
+    internal class Program
     {
+        static void Main()
+        {
+            AudioPlayer audio = new AudioPlayer();
+            audio.PlayWelcomingMessage();
+        }
+
     }
 }
