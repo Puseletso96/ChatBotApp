@@ -1,13 +1,26 @@
 ﻿using System;
-namespace CyberChatbot
-{
-    internal class Program
-    {
-        static void Main()
-        {
-            AudioPlayer audio = new AudioPlayer();
-            audio.PlayWelcomingMessage();
-        }
+using System.Media;
 
+
+namespace ChatbotApp
+{ 
+    public class AudioPlayer
+    {
+        public void PlayWelcomeMessage()
+        {
+            try
+            {
+                SoundPlayer play = new SoundPlayer("Welcomemassege.wav");
+                play.Play();
+            }
+            catch (Exception ex) 
+                
+            {
+                Console.WriteLine($"Error playing audio: {ex.Message}");
+            }
+           
+         
+        }
     }
+   
 }
