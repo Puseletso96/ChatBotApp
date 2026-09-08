@@ -35,15 +35,16 @@ namespace ChatBotApp
             Console.WriteLine("=========================================");
 
             ResponseHandler response = new ResponseHandler();
-            Console.Write($"Please enter your name: {response.Name}");
+            Console.Write($"Please enter your name: ");
             response.Name = Console.ReadLine();
 
 
-            Console.WriteLine($"\nWelcome, {response.Name}! How can I assist you today?");
-            Console.WriteLine("Press key to exit...");
+            // Console.WriteLine($"\nWelcome, {response.Name}! How can I assist you today?");
+            //Console.WriteLine("Press key to exit...");
+
 
             // NAME VALIDATION
-            while(string.IsNullOrWhiteSpace(response.Name))
+            while (string.IsNullOrWhiteSpace(response.Name))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Name cannot be empty");
@@ -59,11 +60,48 @@ namespace ChatBotApp
             Console.WriteLine("I'm here to help stay safe online");
             Console.ResetColor();
             Console.WriteLine("=======================================================================");
-           Console.ReadLine();
+            Console.ReadLine();
 
+            string question;
+            do
+            {
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
+
+                Console.WriteLine("\nAsk a question or type 'exit' : what can i ask you about? ");
+                Console.ResetColor();
+                question = Console.ReadLine().ToLower().Trim();
+
+
+
+                if (question == "exit")
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkCyan;
+                    Console.WriteLine("Goodbye stay safe online!");
+                    Console.ResetColor();
+                    break;
+                }
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
+                Console.Write("\nAssistant: ");
+                response.GetResponse(question);
+                Console.ResetColor();
+
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
+                Console.WriteLine("===========================================================================");
+                Console.ResetColor();
+
+            } while (question != "exit");
+
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.WriteLine($"Thank you for chatting with me: {response.Name}");
+            Console.WriteLine("Remembeer: Stay safe, Stay secure, Stay Smart!");
+            Console.WriteLine("GoodBye!");
+            Console.ResetColor();
+            Console.WriteLine("============================================================================");
+
+            Console.Write("\nPress any key to exit");
 
             Console.ReadKey();
-
 
         }
     }
