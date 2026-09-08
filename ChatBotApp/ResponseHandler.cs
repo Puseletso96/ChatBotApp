@@ -7,30 +7,50 @@ namespace ChatBotApp
     internal class ResponseHandler
     {
         public string Name { get; set; }
-        public string GetResponse(string input)
+        public void GetResponse(string input)
         {
-            if (input.Contains("how areyou") || input.Contains("how are u"))
+            string question;
+            do
+            {
+                Console.WriteLine("\nAsk a question or type 'exit' : what can i ask you about? ");
+                question = Console.ReadLine().ToLower().Trim();
 
-            {
-                return $"I'm doing well thanks for asking!";
-            }
-            else if (input.Contains("purpose"))
-            {
-                return $" I'm your cyber security bot Assistant{Name}! I'm here to educate you about online safety, phishing scams, password security, and safe browsing habits";
+                Console.WriteLine("\nAssistant: ");
+                if (question == "exit")
+                {
+                    Console.WriteLine("Goodbye stay safe online!");
+                }
+                else if (question.Contains("how are you"))
+                {
+                    Console.WriteLine("I am doing well and ready to help you.");
+                }
+                else if (question.Contains("purpose"))
+                {
+                    Console.WriteLine(" The purpose is to teach about cyber safety");
+                }
 
-            }
-            else if (input.Contains("what can i ask") || input.Contains("what can i ask you"))
-            {
-                return $" Great question, {Name}! You can ask me about online safety, phishing scams, password security, and safe browsing habits. I'm here to help you stay safe online!";
-            }
-            else if (input.Contains("help"))
-            {
-                return $" Here's what i can help you with,{Name}!: \n Password safety tips \n How to spot phishing emails\n safe browsing practice\n Recognising social engineering\n\nType 'exit' to end our chat";
-        }
-            else
-            {
-                return $"I'm sorry, {Name}, I didn't understand that. Can you please rephrase your question or ask about online safety, phishing scams, password security, or safe browsing habits?";
-            }
+                else if (question.Contains("What can i ask ") || question.Contains("topic"))
+                {
+                    Console.WriteLine(" You can ask me about password, phishing, and safety browsing");
+                }
+                else if (question.Contains("password"))
+                {
+                    Console.WriteLine(" A strong password should be at least 12 characters long, include a mix of uppercase and lowercase letters, numbers, and special characters. Avoid using easily guessable information like birthdays or common words.");
+                }
+                else if (question.Contains("phishing"))
+                {
+                    Console.WriteLine(" Phishing is a cyber attack where attackers impersonate legitimate organizations to trick individuals into providing sensitive information. Be cautious of unsolicited emails, messages, or links asking for personal information.");
+                }
+                else if (question.Contains("safety browsing"))
+                {
+                    Console.WriteLine(" To ensure safe browsing, use secure websites (look for 'https' in the URL), avoid clicking on suspicious links, keep your browser and software updated, and consider using ad-blockers and antivirus software.");
+                }
+                else
+                {
+                    Console.WriteLine("I'm sorry, I don't have information on that topic. Please ask about password, phishing, or safety browsing.");
+                }
+
+            } while (question != "exit");
         }
     }
 }
