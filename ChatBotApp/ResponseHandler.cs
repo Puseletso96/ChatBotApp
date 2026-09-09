@@ -9,20 +9,18 @@ namespace ChatBotApp
         public string Name { get; set; }
         public void GetResponse(string input)
         {
-            string question;
-            do
-            {
-                Console.WriteLine("\nAsk a question or type 'exit' : what can i ask you about? ");
-                question = Console.ReadLine().ToLower().Trim();
+            string question = input.ToLower().Trim();
 
-                Console.WriteLine("\nAssistant: ");
+            
+
+               
                 if (question == "exit")
                 {
                     Console.WriteLine("Goodbye stay safe online!");
                 }
                 else if (question.Contains("how are you"))
                 {
-                    Console.WriteLine("I am doing well and ready to help you.");
+                    Console.WriteLine($"I am doing well and ready to help you, {Name}");
                 }
                 else if (question.Contains("purpose"))
                 {
@@ -50,7 +48,8 @@ namespace ChatBotApp
                     Console.WriteLine("I'm sorry, I don't have information on that topic. Please ask about password, phishing, or safety browsing.");
                 }
 
-            } while (question != "exit");
+
+            }
         }
     }
-}
+

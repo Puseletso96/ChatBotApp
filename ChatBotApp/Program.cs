@@ -39,14 +39,13 @@ namespace ChatBotApp
             response.Name = Console.ReadLine();
 
 
-            // Console.WriteLine($"\nWelcome, {response.Name}! How can I assist you today?");
-            //Console.WriteLine("Press key to exit...");
+            
 
 
             // NAME VALIDATION
             while (string.IsNullOrWhiteSpace(response.Name))
             {
-                Console.ForegroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("Name cannot be empty");
                 Console.ResetColor();
 
@@ -56,11 +55,11 @@ namespace ChatBotApp
 
             // PERSONALIZED GREETING
             Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine($"\t Hello, {response.Name}! Welcome to the Cybersecurity Chatbot System.");
+            Console.WriteLine($"\n Hello, {response.Name}! Welcome to the Cybersecurity Chatbot System.");
             Console.WriteLine("I'm here to help stay safe online");
             Console.ResetColor();
             Console.WriteLine("=======================================================================");
-            Console.ReadLine();
+           
 
             string question;
             do
@@ -82,7 +81,22 @@ namespace ChatBotApp
                 }
                 Console.ForegroundColor = ConsoleColor.DarkCyan;
                 Console.Write("\nAssistant: ");
+
+
+                // Typing effect
+                var writer = new System.IO.StringWriter();
+                var original = Console.Out;
+                Console.SetOut(writer);
                 response.GetResponse(question);
+                Console.SetOut(original);
+                
+                string text = writer.ToString();
+
+                foreach(char c in text)
+                {
+                    Console.Write(c);
+                    System.Threading.Thread.Sleep(20);
+                }
                 Console.ResetColor();
 
                 Console.ForegroundColor = ConsoleColor.DarkCyan;
@@ -94,7 +108,7 @@ namespace ChatBotApp
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine($"Thank you for chatting with me: {response.Name}");
-            Console.WriteLine("Remembeer: Stay safe, Stay secure, Stay Smart!");
+            Console.WriteLine("Remember: Stay safe, Stay secure, Stay Smart!");
             Console.WriteLine("GoodBye!");
             Console.ResetColor();
             Console.WriteLine("============================================================================");
