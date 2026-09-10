@@ -50,7 +50,7 @@ namespace ChatBotApp
             }
 
             // PERSONALIZED GREETING
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.ForegroundColor = ConsoleColor.DarkBlue;
             Console.WriteLine($"\n Hello, {response.Name}! Welcome to the Cybersecurity Chatbot System.");
             Console.WriteLine("I'm here to help stay safe online");
             Console.ResetColor();
