@@ -19,6 +19,11 @@ methods, properties, conditional statements, strings, user input and output.
 -  Handles unknown questions with a default response.
 -  Allows the chatbot to use a name.
 -  Allows continuous interaction between the user and chatbot.
+- Plays a recorded voice greeting on startup.
+- Displays an ASCII art logo with colour formatting.
+- Validates the user's name and rejects empty input.
+- Personalises responses and farewells using the user's name.
+- Provides cybersecurity guidance on passwords, phishing, and safe browsing.
  
 ## Technologies Used
 
@@ -27,6 +32,11 @@ methods, properties, conditional statements, strings, user input and output.
 - **Visual Studio**
 - **Console Application**
 - **GitHub**
+
+## How to run the application
+- Open ChatBotApp.sln in Visual Studio.
+- Ensure ChatBotApp is set as the startup project.
+- Press F5 or click the green Run button.
 
 ## Project Structure
 
@@ -49,6 +59,7 @@ ChatBotApp/
 │
 └── Resources/
     └── ...
+
  ## Author
 
  - Tshesana Puseletso
