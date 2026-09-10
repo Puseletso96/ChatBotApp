@@ -1,4 +1,4 @@
-# ChatBotApp 
+# ChatBotApp 🤖
 
 ## Project Description
 
@@ -15,7 +15,7 @@ methods, properties, conditional statements, strings, user input and output.
 -  Greets the user.
 -  Accepts user input from the console.
 -  Provides responses to different questions.
-- Converts user input to lowercase for easier comparison.
+-  Converts user input to lowercase for easier comparison.
 -  Handles unknown questions with a default response.
 -  Allows the chatbot to use a name.
 -  Allows continuous interaction between the user and chatbot.
@@ -49,32 +49,4 @@ ChatBotApp/
 │
 └── Resources/
     └── ...
-
- ## Author
-
-**Puseletso Tshesana**
-
-This project was developed by Puseletso Tshesana as part of the C# programming coursework at Rosebank College.
-
-## References
-
-GitHub (2026) *GitHub Documentation*. Available at: https://docs.github.com/ 
-(Accessed: 10 September 2026).
-
-Microsoft (2026) *C# documentation*. Microsoft Learn. Available at: 
-https://learn.microsoft.com/en-us/dotnet/csharp/ 
-(Accessed: 10 September 2026).
-
-Microsoft (2026) *.NET documentation*. Microsoft Learn. Available at: 
-https://learn.microsoft.com/en-us/dotnet/ 
-(Accessed: 10 September 2026).
-
-Microsoft (2026) *Visual Studio documentation*. Microsoft Learn. Available at: 
-https://learn.microsoft.com/en-us/visualstudio/ 
-(Accessed: 10 September 2026).
-
-OpenAI (2026) *ChatGPT*. Available at: https://chatgpt.com/ 
-(Accessed: 10 September 2026).
-
-W3Schools (2026) *C# Tutorial*. Available at: https://www.w3schools.com/cs/ 
-(Accessed: 10 September 2026).
+    
