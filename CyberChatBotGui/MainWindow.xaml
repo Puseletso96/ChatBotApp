@@ -1,12 +1,95 @@
 ﻿<Window x:Class="CyberChatBotGui.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CyberChatBotGui"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="CyberChatbot - Cybersecurity Awareness Bot" 
+        Height="750" Width="1050"
+        Background="#1A1025"
+        WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded">
 
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- ==================== HEADER ==================== -->
+        <Border Grid.Row="0"
+                Background="#2D1B4E"
+                CornerRadius="10"
+                Padding="20"
+                Margin="0,0,0,10">
+            <!-- Removed the inner Grid since the button is gone. 
+                 The StackPanel now centers itself within the Border. -->
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock x:Name="AsciiArtTextBlock"
+                           FontFamily="Consolas"
+                           FontSize="6"
+                           Foreground="#FF2E93"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"
+                           TextWrapping="NoWrap"/>
+                <TextBlock Text="CYBERSECURITY AWARENESS BOT" 
+                           FontSize="18" 
+                           FontWeight="Bold" 
+                           Foreground="#FF2E93"
+                           HorizontalAlignment="Center"
+                           Margin="0,10,0,0"/>
+                <TextBlock Text="Stay Safe. Stay Secure. Stay Smart." 
+                           FontSize="12" 
+                           Foreground="#B8A9D4"
+                           HorizontalAlignment="Center"
+                           Margin="0,3,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- ==================== CHAT AREA ==================== -->
+        <Border Grid.Row="1"
+                Background="#2D1B4E"
+                CornerRadius="10"
+                Padding="15"
+                Margin="0,0,0,10">
+            <ScrollViewer x:Name="ChatScrollViewer" 
+                          VerticalScrollBarVisibility="Auto">
+                <StackPanel x:Name="ChatStackPanel"/>
+            </ScrollViewer>
+        </Border>
+
+        <!-- ==================== INPUT AREA ==================== -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" 
+                    Background="#3D275E" 
+                    CornerRadius="10" 
+                    Padding="5"
+                    Margin="0,0,10,0">
+                <TextBox x:Name="UserInputTextBox" 
+                         FontSize="16" 
+                         Background="Transparent"
+                         Foreground="White"
+                         BorderThickness="0"
+                         Padding="10"
+                         VerticalContentAlignment="Center"
+                         KeyDown="UserInputTextBox_KeyDown"/>
+            </Border>
+
+            <Button Grid.Column="1" 
+                    x:Name="SendButton" 
+                    Content="SEND" 
+                    Width="120" 
+                    Height="45"
+                    Background="#FF2E93"
+                    Foreground="#1A1025"
+                    FontSize="16" 
+                    FontWeight="Bold"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    Click="SendButton_Click"/>
+        </Grid>
     </Grid>
 </Window>
