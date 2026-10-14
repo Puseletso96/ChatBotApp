@@ -2,7 +2,7 @@
 using System.Media;
 
 
-namespace ChatbotApp
+namespace ChatBotApp
 { 
     public class AudioPlayer
     {

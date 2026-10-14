@@ -1,5 +1,5 @@
 ﻿using System;
-using ChatbotApp;
+
 using ChatBotApp;
 
 namespace ChatBotApp
@@ -15,14 +15,14 @@ namespace ChatBotApp
             Console.ForegroundColor = ConsoleColor.Cyan;
 
             Console.WriteLine(@"=======================================================================================================================================================================
-                                     ______      __                 _____                      _ __           ___                                                   ____        __ 
+   ______      __                                                                            
   / ____/_  __/ /_  ___  _____   / ___/___  _______  _______(_) /___  __   /   |_      ______ _________  ____  ___  __________   / __ )____  / /_
  / /   / / / / __ \/ _ \/ ___/   \__ \/ _ \/ ___/ / / / ___/ / __/ / / /  / /| | | /| / / __ `/ ___/ _ \/ __ \/ _ \/ ___/ ___/  / __  / __ \/ __/
 / /___/ /_/ / /_/ /  __/ /      ___/ /  __/ /__/ /_/ / /  / / /_/ /_/ /  / ___ | |/ |/ / /_/ / /  /  __/ / / /  __(__  |__  )  / /_/ / /_/ / /_  
 \____/\__, /_.___/\___/_/      /____/\___/\___/\__,_/_/  /_/\__/\__, /  /_/  |_|__/|__/\__,_/_/   \___/_/ /_/\___/____/____/  /_____/\____/\__/  
      /____/                                                    /____/                                                                                                                                                     
  
-========================================================================================================================================================================================================");
+===================================================================================================================================================================================");
             Console.ResetColor();
 
             Console.WriteLine();
@@ -50,7 +50,7 @@ namespace ChatBotApp
             }
 
             // PERSONALIZED GREETING
-            Console.ForegroundColor = ConsoleColor.DarkBlue;
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine($"\n Hello, {response.Name}! Welcome to the Cybersecurity Chatbot System.");
             Console.WriteLine("I'm here to help stay safe online");
             Console.ResetColor();
@@ -77,6 +77,7 @@ namespace ChatBotApp
                 }
                 Console.ForegroundColor = ConsoleColor.DarkCyan;
                 Console.Write("\nAssistant: ");
+                Console.ResetColor();
 
 
                 // Typing effect
