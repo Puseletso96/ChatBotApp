@@ -65,7 +65,7 @@ The bot detects the user's emotional tone and adjusts its response accordingly:
 ### Steps to Run
 1. Clone this repository to your local machine:
    ```bash
-   git clone https://github.com/[Puseletso96]/[https://github.com/Puseletso96/ChatBotApp/edit/master/README.md].git
+   git clone https://github.com/Puseletso96/ChatBotApp.git
 
 ##  Author          
 - **Student Name:** Tshesana Puseletso
