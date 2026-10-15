@@ -25,7 +25,7 @@ namespace CyberChatBotGui
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             // Play voice greeting
-            _audioPlayer.PlayGreeting();
+           _audioPlayer.PlayGreeting();
 
             // ASCII art
             string asciiArt = @" 
@@ -37,6 +37,8 @@ namespace CyberChatBotGui
      /____/                                                 /____/                                                                            
 ";
             AsciiArtTextBlock.Text = asciiArt;
+
+            
 
             // Welcome message
             AppendToChat("Bot: " + DIVIDER);
