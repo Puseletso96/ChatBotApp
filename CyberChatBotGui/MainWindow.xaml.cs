@@ -1,7 +1,9 @@
 ﻿using CyberChatbotGui;
 using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace CyberChatBotGui
 {
@@ -12,7 +14,7 @@ namespace CyberChatBotGui
         private ChatbotEngine _engine = new ChatbotEngine();
         private UserSession _session = new UserSession();
 
-        private const string DIVIDER = "================================================";
+        private const string DIVIDER = "================================";
 
         public MainWindow()
         {
@@ -25,7 +27,7 @@ namespace CyberChatBotGui
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             // Play voice greeting
-           _audioPlayer.PlayGreeting();
+            _audioPlayer.PlayGreeting();
 
             // ASCII art
             string asciiArt = @" 
@@ -38,13 +40,11 @@ namespace CyberChatBotGui
 ";
             AsciiArtTextBlock.Text = asciiArt;
 
-            
-
-            // Welcome message
-            AppendToChat("Bot: " + DIVIDER);
-            AppendToChat("Bot:    WELCOME TO THE CYBERCHATBOT SYSTEM");
-            AppendToChat("Bot: " + DIVIDER);
-            AppendToChat("Bot: Please enter your name:");
+            // Welcome message (Using the new bubble methods)
+            AddBotMessage(DIVIDER);
+            AddBotMessage("WELCOME TO THE CYBERCHATBOT SYSTEM");
+            AddBotMessage(DIVIDER);
+            AddBotMessage("Please enter your name:");
         }
 
         private void SendButton_Click(object sender, RoutedEventArgs e)
@@ -75,8 +75,8 @@ namespace CyberChatBotGui
             // Don't process empty messages
             if (string.IsNullOrEmpty(input)) return;
 
-            // Show user's message
-            AppendToChat("You: " + input);
+            // Show user's message (Using the new bubble method)
+            AddUserMessage(input);
             UserInputTextBox.Clear();
             UserInputTextBox.Focus();
 
@@ -84,30 +84,81 @@ namespace CyberChatBotGui
             if (string.IsNullOrEmpty(_session.Name))
             {
                 _session.Name = input;
-                AppendToChat("Bot: " + $"Welcome, {_session.Name}! You are now connected to the CyberChatbot System.");
-                AppendToChat("Bot: " + DIVIDER);
-                AppendToChat("Bot: " + $"I can help you with passwords, phishing, safe browsing, and privacy. What would you like to know, {_session.Name}?");
+                AddBotMessage($"Welcome, {_session.Name}! You are now connected to the CyberChatbot System.");
+                AddBotMessage(DIVIDER);
+                AddBotMessage($"I can help you with passwords, phishing, safe browsing, and privacy. What would you like to know, {_session.Name}?");
             }
             else
             {
-                // Fix for the 'ref' error
+               
                 string tempTopic = _session.FavouriteTopic;
                 string botResponse = _engine.GetResponse(input, _session.Name, ref tempTopic);
 
                 // Save the updated topic back into the session memory
                 _session.FavouriteTopic = tempTopic;
 
-                AppendToChat("Bot: " + botResponse);
+                AddBotMessage(botResponse);
             }
         }
 
-        /// <summary>
-        /// Adds a message to the chat display and scrolls to the bottom.
-        /// </summary>
-        private void AppendToChat(string message)
+        // ==================== CHAT BUBBLE METHODS ====================
+
+        private void AddUserMessage(string message)
         {
-            ChatDisplay.Text += message + "\n\n";
-            ChatDisplay.ScrollToEnd();
+            // Create the text inside the bubble
+            TextBlock text = new TextBlock
+            {
+                Text = message,
+                Foreground = Brushes.White,
+                TextWrapping = TextWrapping.Wrap,
+                Margin = new Thickness(10, 5, 10, 5)
+            };
+
+            // Create the bubble itself
+            Border bubble = new Border
+            {
+                Background = new SolidColorBrush(Color.FromRgb(0x3D, 0x27, 0x5E)), // A medium purple
+                CornerRadius = new CornerRadius(10),
+                Margin = new Thickness(80, 5, 0, 5), // Pushes the bubble to the right
+                HorizontalAlignment = HorizontalAlignment.Right,
+                MaxWidth = 400, // Prevents the bubble from getting too wide
+                Child = text
+            };
+
+            // Add the bubble to the chat panel
+            ChatStackPanel.Children.Add(bubble);
+
+            // Scroll to the bottom
+            ChatScrollViewer.ScrollToEnd();
+        }
+
+        private void AddBotMessage(string message)
+        {
+            // Create the text inside the bubble
+            TextBlock text = new TextBlock
+            {
+                Text = message,
+                Foreground = Brushes.White,
+                TextWrapping = TextWrapping.Wrap,
+                Margin = new Thickness(10, 5, 10, 5)
+            };
+
+            // Create the bubble itself
+            Border bubble = new Border
+            {
+                Background = new SolidColorBrush(Color.FromRgb(0x1A, 0x10, 0x25)), // A dark navy/purple
+                CornerRadius = new CornerRadius(10),
+                Margin = new Thickness(0, 5, 80, 5), // Pushes the bubble to the left
+                HorizontalAlignment = HorizontalAlignment.Left,
+                MaxWidth = 400,
+                Child = text
+            };
+
+            // Add the bubble to the chat panel
+            ChatStackPanel.Children.Add(bubble);
+
+            // Scroll to the bottom
+            ChatScrollViewer.ScrollToEnd();
         }
     }
 }

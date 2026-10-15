@@ -54,18 +54,13 @@
                 CornerRadius="10"
                 Padding="15"
                 Margin="0,0,0,10">
-            <TextBox x:Name="ChatDisplay" 
-                     Background="Transparent" 
-                     Foreground="White" 
-                     BorderThickness="0" 
-                     FontSize="14" 
-                     IsReadOnly="True" 
-                     AcceptsReturn="True"
-                     TextWrapping="Wrap"
-                     VerticalScrollBarVisibility="Auto"
-                     Padding="5"/>
-        </Border>
 
+            <!-- We use a ScrollViewer to allow scrolling, and a StackPanel to hold the chat bubbles -->
+            <ScrollViewer x:Name="ChatScrollViewer" 
+                          VerticalScrollBarVisibility="Auto">
+                <StackPanel x:Name="ChatStackPanel"/>
+            </ScrollViewer>
+        </Border>
         <!-- ==================== INPUT AREA ==================== -->
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
