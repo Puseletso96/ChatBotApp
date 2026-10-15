@@ -71,5 +71,41 @@ The bot detects the user's emotional tone and adjusts its response accordingly:
 ### Steps to Run
 1. Clone this repository to your local machine:
    ```bash
-   git clone https://github.com/[YourUsername]/[YourRepoName].git
+   git clone https://github.com/[Puseletso96]/[https://github.com/Puseletso96/ChatBotApp/edit/master/README.md].git
+   
+
+
+##  Author          
+- **Student Name:** Tshesana Puseletso
+- **Student Number:** ST10498947
+- **Module:** PRO6221
+- **Institution:** The Independent Institute of Education (IIE)
+
+
+##  References      
+
+GitHub (2026) *GitHub Documentation*. Available at: https://docs.github.com/ 
+(Accessed: 10 September 2026).
+
+Microsoft (2026) *C# documentation*. Microsoft Learn. Available at: 
+https://learn.microsoft.com/en-us/dotnet/csharp/ 
+(Accessed: 10 September 2026).
+
+Microsoft (2026) *.NET documentation*. Microsoft Learn. Available at: 
+https://learn.microsoft.com/en-us/dotnet/ 
+(Accessed: 10 September 2026).
+
+Microsoft (2026) *Visual Studio documentation*. Microsoft Learn. Available at: 
+https://learn.microsoft.com/en-us/visualstudio/ 
+(Accessed: 10 September 2026).
+
+OpenAI (2026) *ChatGPT*. Available at: https://chatgpt.com/ 
+(Accessed: 10 September 2026).
+
+Pieterse, H. 2021. The Cyber Threat Landscape in South Africa: A 10-Year Review. 
+*The African Journal of Information and Communication*, 28(28). 
+doi: https://doi.org/10.23962/10539/32213.
+
+W3Schools (2026) *C# Tutorial*. Available at: https://www.w3schools.com/cs/ 
+(Accessed: 10 September 2026).
    
