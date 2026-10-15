@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CybersecurityChatbotGUI
+namespace CyberChatbotGui
 {
     public class ChatbotEngine
     {
         // ==========================================
         // 1. RANDOM RESPONSES (Dictionary & Lists)
         // ==========================================
-        // The rubric requires using arrays/lists to store multiple responses
-        // for the same keyword so the bot doesn't sound repetitive.
+        
         private Dictionary<string, List<string>> keywordResponses = new Dictionary<string, List<string>>()
         {
             { "password", new List<string> {
@@ -52,7 +51,7 @@ namespace CybersecurityChatbotGUI
         // ==========================================
         public string GetResponse(string input, string userName, ref string favouriteTopic)
         {
-            // --- ERROR HANDLING (Rubric Requirement) ---
+            //  ERROR HANDLING 
             if (string.IsNullOrWhiteSpace(input))
             {
                 return "Please type a message so I can help you.";
@@ -61,11 +60,11 @@ namespace CybersecurityChatbotGUI
             // Convert to lowercase for easy matching
             string question = input.ToLower().Trim();
 
-            // --- SENTIMENT DETECTION (Rubric Requirement) ---
-            // We check for sentiment first so we can add an empathetic prefix
+            // --- SENTIMENT DETECTION ---
+            
             string sentimentPrefix = DetectSentiment(question);
 
-            // --- MEMORY RECALL (Rubric Requirement) ---
+            // --- MEMORY RECALL  ---
             // If the user asks about their favourite topic, recall it from memory
             if (question.Contains("favourite topic") || question.Contains("favorite topic"))
             {

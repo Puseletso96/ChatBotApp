@@ -1,8 +1,7 @@
-﻿using System;
+﻿using CyberChatbotGui;
+using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace CyberChatBotGui
 {
@@ -10,7 +9,9 @@ namespace CyberChatBotGui
     {
         // ============ FIELDS ============
         private AudioPlayer _audioPlayer = new AudioPlayer();
-        private string _userName = "";
+        private ChatbotEngine _engine = new ChatbotEngine();
+        private UserSession _session = new UserSession();
+
         private const string DIVIDER = "================================================";
 
         public MainWindow()
@@ -38,10 +39,10 @@ namespace CyberChatBotGui
             AsciiArtTextBlock.Text = asciiArt;
 
             // Welcome message
-            AddBotMessage(DIVIDER);
-            AddBotMessage("   WELCOME TO THE CYBERCHATBOT SYSTEM");
-            AddBotMessage(DIVIDER);
-            AddBotMessage("Please enter your name:");
+            AppendToChat("Bot: " + DIVIDER);
+            AppendToChat("Bot:    WELCOME TO THE CYBERCHATBOT SYSTEM");
+            AppendToChat("Bot: " + DIVIDER);
+            AppendToChat("Bot: Please enter your name:");
         }
 
         private void SendButton_Click(object sender, RoutedEventArgs e)
@@ -73,95 +74,38 @@ namespace CyberChatBotGui
             if (string.IsNullOrEmpty(input)) return;
 
             // Show user's message
-            AddUserMessage(input);
-
-            // If name hasn't been set, save it
-            if (string.IsNullOrEmpty(_userName))
-            {
-                _userName = input;
-                AddBotMessage($"Welcome, {_userName}! You are now connected to the CyberChatbot System.");
-                AddBotMessage(DIVIDER);
-                AddBotMessage($"I can help you with passwords, phishing, safe browsing, and privacy. What would you like to know, {_userName}?");
-            }
-            else
-            {
-                // Get bot response (basic keyword matching)
-                string botResponse = GetBotResponse(input);
-                AddBotMessage(botResponse);
-            }
-
-            // Reset input
+            AppendToChat("You: " + input);
             UserInputTextBox.Clear();
             UserInputTextBox.Focus();
-        }
 
-        /// <summary>
-        /// Basic keyword matching for bot responses.
-        /// </summary>
-        private string GetBotResponse(string input)
-        {
-            string lowerInput = input.ToLower();
-
-            if (lowerInput.Contains("password"))
+            // If name hasn't been set, save it
+            if (string.IsNullOrEmpty(_session.Name))
             {
-                return $"{_userName}, use strong, unique passwords for every account. Consider a password manager!";
-            }
-            else if (lowerInput.Contains("phishing"))
-            {
-                return $"{_userName}, never click suspicious links in emails. Verify the sender first.";
-            }
-            else if (lowerInput.Contains("privacy"))
-            {
-                return $"{_userName}, review your privacy settings on social media regularly.";
-            }
-            else if (lowerInput.Contains("hello") || lowerInput.Contains("hi"))
-            {
-                return $"Hello, {_userName}! How can I help with your cybersecurity questions?";
+                _session.Name = input;
+                AppendToChat("Bot: " + $"Welcome, {_session.Name}! You are now connected to the CyberChatbot System.");
+                AppendToChat("Bot: " + DIVIDER);
+                AppendToChat("Bot: " + $"I can help you with passwords, phishing, safe browsing, and privacy. What would you like to know, {_session.Name}?");
             }
             else
             {
-                return $"I'm still learning about that, {_userName}. Ask me about passwords, phishing, or privacy!";
+                // Fix for the 'ref' error
+                string tempTopic = _session.FavouriteTopic;
+                string botResponse = _engine.GetResponse(input, _session.Name, ref tempTopic);
+
+                // Save the updated topic back into the session memory
+                _session.FavouriteTopic = tempTopic;
+
+                AppendToChat("Bot: " + botResponse);
             }
         }
 
         /// <summary>
-        /// Adds a user message to the chat.
+        /// Adds a message to the chat display and scrolls to the bottom.
         /// </summary>
-        private void AddUserMessage(string message)
+        private void AppendToChat(string message)
         {
-            TextBlock userText = new TextBlock
-            {
-                Text = "You: " + message,
-                Foreground = Brushes.LightGreen,
-                Margin = new Thickness(0, 5, 0, 5),
-                TextWrapping = TextWrapping.Wrap
-            };
-            ChatStackPanel.Children.Add(userText);
-            ScrollToBottom();
-        }
-
-        /// <summary>
-        /// Adds a bot message to the chat.
-        /// </summary>
-        private void AddBotMessage(string message)
-        {
-            TextBlock botText = new TextBlock
-            {
-                Text = "Bot: " + message,
-                Foreground = Brushes.LightBlue,
-                Margin = new Thickness(0, 5, 0, 5),
-                TextWrapping = TextWrapping.Wrap
-            };
-            ChatStackPanel.Children.Add(botText);
-            ScrollToBottom();
-        }
-
-        /// <summary>
-        /// Scrolls the chat to the bottom.
-        /// </summary>
-        private void ScrollToBottom()
-        {
-            ChatScrollViewer.ScrollToEnd();
+            ChatDisplay.Text += message + "\n\n";
+            ChatDisplay.ScrollToEnd();
         }
     }
 }
