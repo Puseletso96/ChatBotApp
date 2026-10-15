@@ -49,7 +49,10 @@ namespace CyberChatBotGui
 
         private void SendButton_Click(object sender, RoutedEventArgs e)
         {
-            ProcessUserInput();
+            ProcessUserInput();{ 
+
+            }
+
         }
 
         private void UserInputTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -75,10 +78,31 @@ namespace CyberChatBotGui
             // Don't process empty messages
             if (string.IsNullOrEmpty(input)) return;
 
+
             // Show user's message (Using the new bubble method)
             AddUserMessage(input);
             UserInputTextBox.Clear();
             UserInputTextBox.Focus();
+            // ==========================================
+            // CHECK FOR EXIT COMMAND
+            // ==========================================
+            string lowerInput = input.ToLower();
+            if (lowerInput == "exit" || lowerInput == "quit" || lowerInput == "bye" || lowerInput == "goodbye")
+            {
+                // Use the user's name if we have it, otherwise use a generic greeting
+                string name = string.IsNullOrEmpty(_session.Name) ? "friend" : _session.Name;
+
+                AddBotMessage($"Goodbye, {name}! Thank you for using the Cybersecurity Awareness Bot.");
+                AddBotMessage("Remember: Stay Safe, Stay Secure, Stay Smart!");
+
+                // Wait 1.5 seconds so the user can read the goodbye message
+                System.Threading.Thread.Sleep(1500);
+
+                // Close the entire application
+                Application.Current.Shutdown();
+
+                return; // Stop processing further code
+            }
 
             // If name hasn't been set, save it
             if (string.IsNullOrEmpty(_session.Name))
