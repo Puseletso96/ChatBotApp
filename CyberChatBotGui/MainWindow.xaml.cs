@@ -21,9 +21,8 @@ namespace CyberChatBotGui
             InitializeComponent();
         }
 
-        /// <summary>
         /// Runs when window loads - plays greeting + shows ASCII art + welcome.
-        /// </summary>
+      
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             // Play voice greeting
@@ -83,9 +82,9 @@ namespace CyberChatBotGui
             AddUserMessage(input);
             UserInputTextBox.Clear();
             UserInputTextBox.Focus();
-            // ==========================================
+            
             // CHECK FOR EXIT COMMAND
-            // ==========================================
+            
             string lowerInput = input.ToLower();
             if (lowerInput == "exit" || lowerInput == "quit" || lowerInput == "bye" || lowerInput == "goodbye")
             {
@@ -95,14 +94,15 @@ namespace CyberChatBotGui
                 AddBotMessage($"Goodbye, {name}! Thank you for using the Cybersecurity Awareness Bot.");
                 AddBotMessage("Remember: Stay Safe, Stay Secure, Stay Smart!");
 
-                // Wait 1.5 seconds so the user can read the goodbye message
-                System.Threading.Thread.Sleep(1500);
+                // Wait 2 minutes so the user can read the goodbye message
+                System.Threading.Thread.Sleep(12000);
 
                 // Close the entire application
                 Application.Current.Shutdown();
 
                 return; // Stop processing further code
             }
+
 
             // If name hasn't been set, save it
             if (string.IsNullOrEmpty(_session.Name))

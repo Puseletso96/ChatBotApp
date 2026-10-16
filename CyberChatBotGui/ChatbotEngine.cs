@@ -5,9 +5,8 @@ namespace CyberChatbotGui
 {
     public class ChatbotEngine
     {
-        // ==========================================
+       
         // 1. RANDOM RESPONSES (Dictionary & Lists)
-        // ==========================================
         
         private Dictionary<string, List<string>> keywordResponses = new Dictionary<string, List<string>>()
         {
@@ -46,9 +45,8 @@ namespace CyberChatbotGui
         // A Random object to pick a random index from the lists above
         private Random random = new Random();
 
-        // ==========================================
         // 2. MAIN PROCESSING METHOD
-        // ==========================================
+        
         public string GetResponse(string input, string userName, ref string favouriteTopic)
         {
             //  ERROR HANDLING 
@@ -101,9 +99,8 @@ namespace CyberChatbotGui
             return "I'm not sure I understand. Can you try rephrasing? You can ask me about passwords, scams, privacy, phishing, or safe browsing.";
         }
 
-        // ==========================================
         // 3. SENTIMENT DETECTION HELPER METHOD
-        // ==========================================
+        
         private string DetectSentiment(string input)
         {
             if (input.Contains("worried") || input.Contains("scared") || input.Contains("afraid") || input.Contains("anxious"))
