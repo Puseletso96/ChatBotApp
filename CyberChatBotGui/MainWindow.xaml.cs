@@ -14,6 +14,7 @@ namespace CyberChatBotGui
         private AudioPlayer _audioPlayer = new AudioPlayer();
         private ChatbotEngine _engine = new ChatbotEngine();
         private UserSession _session = new UserSession();
+        private ActivityLog _activityLog = new ActivityLog();
         private bool _isLoaded = false;
 
         public MainWindow()
@@ -28,7 +29,6 @@ namespace CyberChatBotGui
 
             _audioPlayer.PlayGreeting();
 
-            // ASCII art
             string asciiArt = @" 
    ______      __              _____                      _ __           ___                                                   ____        __ 
   / ____/_  __/ /_  ___  _____/ ___/___  _______  _______(_) /___  __   /   |_      ______ _________  ____  ___  __________   / __ )____  / /_
@@ -39,17 +39,23 @@ namespace CyberChatBotGui
 ";
             AsciiArtTextBlock.Text = asciiArt;
 
-            // Welcome message
             AddBotMessage("==============================================");
             AddBotMessage("WELCOME TO THE CYBERCHATBOT SYSTEM");
             AddBotMessage("==============================================");
             AddBotMessage("Please enter your name:");
         }
+
         private void SendButton_Click(object sender, RoutedEventArgs e) => ProcessUserInput();
+
         private void UserInputTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter) { e.Handled = true; ProcessUserInput(); }
+            if (e.Key == Key.Enter)
+            {
+                e.Handled = true;
+                ProcessUserInput();
+            }
         }
+
         private void VoiceButton_Click(object sender, RoutedEventArgs e) => _audioPlayer.PlayGreeting();
 
         private void ProcessUserInput()
@@ -62,27 +68,8 @@ namespace CyberChatBotGui
             UserInputTextBox.Focus();
 
             string lowerInput = input.ToLower();
-            if (lowerInput.Contains("start quiz") || lowerInput.Contains("play game"))
-            {
-                AddBotMessage("Starting the Cybersecurity Mini-Game...");
-                AddBotMessage("Quiz finished! what else Can i help you with?");
-                return;
 
-            }
-            if (lowerInput.Contains("Add task") || lowerInput.Contains("remind me to"))
-            {
-                string taskTitle = input.Replace("add task", "").Replace("remind me to", "").Trim();
-                _db.AddTask(taskTitle, "Added via chat", null);
-                AddBotMessage($"Task added: '{taskTitle}'. You can view in the tasks tab");
-                TaskListBox.ItemsSource = _db.GetTasks();
-                return;
-                if (lowerInput.Contains("show activity log") || lowerInput.Contains("what have you done"))
-                {
-                    AddBotMessage("Here is a summary of recent actions:\n1. Task added: Enable 2FA\n2. Quiz started");
-                    return;
-                }
-                }
-                if (lowerInput == "exit" || lowerInput == "quit" || lowerInput == "bye")
+            if (lowerInput == "exit" || lowerInput == "quit" || lowerInput == "bye")
             {
                 string name = string.IsNullOrEmpty(_session.Name) ? "friend" : _session.Name;
                 AddBotMessage($"Goodbye, {name}! Remember: Stay Safe, Stay Secure, Stay Smart!");
@@ -95,15 +82,44 @@ namespace CyberChatBotGui
             {
                 _session.Name = input;
                 AddBotMessage($"Welcome, {_session.Name}! I can help you with passwords, phishing, safe browsing, scams, and privacy.");
+                return;
             }
-            else
-            {
-                string tempTopic = _session.FavouriteTopic;
-                string botResponse = _engine.GetResponse(input, _session.Name, ref tempTopic);
-                _session.FavouriteTopic = tempTopic;
 
-                AddBotMessage(botResponse);
+            // 3. Pass input to the Chatbot Engine (NLP, Sentiment, Memory)
+            string tempTopic = _session.FavouriteTopic;
+            string botResponse = _engine.GetResponse(input, _session.Name, ref tempTopic);
+            _session.FavouriteTopic = tempTopic;
+
+            // 4. Catch Part 3 Triggers from the Engine
+            if (botResponse == "NLP_QUIZ_TRIGGER")
+            {
+                AddBotMessage("Starting the Cybersecurity Mini-Game...");
+                _activityLog.AddAction("User started the Quiz");
+
+
+                AddBotMessage("Quiz finished! What else can I help you with?");
+                return;
             }
+
+            if (botResponse == "NLP_TASK_TRIGGER")
+            {
+                string taskTitle = lowerInput.Replace("add task", "").Replace("remind me to", "").Trim();
+
+                _db.AddTask(taskTitle, "Added via chat NLP", null);
+                _activityLog.AddAction($"Task added: {taskTitle}");
+
+                AddBotMessage($"Task added: '{taskTitle}'. You can view it in the Tasks tab.");
+                TaskListBox.ItemsSource = _db.GetTasks();
+                return;
+            }
+
+            if (botResponse == "NLP_LOG_TRIGGER")
+            {
+                AddBotMessage(_activityLog.GetLogSummary());
+                return;
+            }
+
+            AddBotMessage(botResponse);
         }
 
         private void AddUserMessage(string message)
@@ -137,8 +153,8 @@ namespace CyberChatBotGui
             ChatStackPanel.Children.Add(bubble);
             Dispatcher.BeginInvoke(new Action(() => ChatScrollViewer.ScrollToEnd()));
         }
-    
-     private void RefreshTasks_Click(object sender, RoutedEventArgs e)
+
+        private void RefreshTasks_Click(object sender, RoutedEventArgs e)
         {
             TaskListBox.ItemsSource = _db.GetTasks();
         }
