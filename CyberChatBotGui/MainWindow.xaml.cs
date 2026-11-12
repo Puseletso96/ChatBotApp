@@ -1,31 +1,30 @@
-﻿using CyberChatbotGui;
+﻿using CyberChatBotGui;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace CyberChatBotGui
+namespace CyberChatBotGui 
 {
     public partial class MainWindow : Window
     {
-        // ============ FIELDS ============
         private AudioPlayer _audioPlayer = new AudioPlayer();
-        private ChatbotEngine _engine = new ChatbotEngine();
+        private ChatbotEngine _engine = new ChatbotEngine(); 
         private UserSession _session = new UserSession();
-
-        private const string DIVIDER = "================================";
+        private bool _isLoaded = false;
 
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        /// Runs when window loads - plays greeting + shows ASCII art + welcome.
-      
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            // Play voice greeting
+            if (_isLoaded) return;
+            _isLoaded = true;
+
             _audioPlayer.PlayGreeting();
 
             // ASCII art
@@ -39,150 +38,83 @@ namespace CyberChatBotGui
 ";
             AsciiArtTextBlock.Text = asciiArt;
 
-            // Welcome message (Using the new bubble methods)
-            AddBotMessage(DIVIDER);
+            // Welcome message
+            AddBotMessage("==============================================");
             AddBotMessage("WELCOME TO THE CYBERCHATBOT SYSTEM");
-            AddBotMessage(DIVIDER);
+            AddBotMessage("==============================================");
             AddBotMessage("Please enter your name:");
         }
-
-        private void SendButton_Click(object sender, RoutedEventArgs e)
-        {
-            ProcessUserInput();{ 
-
-            }
-
-        }
-
+        private void SendButton_Click(object sender, RoutedEventArgs e) => ProcessUserInput();
         private void UserInputTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
-            {
-                ProcessUserInput();
-            }
+            if (e.Key == Key.Enter) { e.Handled = true; ProcessUserInput(); }
         }
+        private void VoiceButton_Click(object sender, RoutedEventArgs e) => _audioPlayer.PlayGreeting();
 
-        private void VoiceButton_Click(object sender, RoutedEventArgs e)
-        {
-            _audioPlayer.PlayGreeting();
-        }
-
-        /// <summary>
-        /// Reads user input, validates it, and routes appropriately.
-        /// </summary>
         private void ProcessUserInput()
         {
             string input = UserInputTextBox.Text?.Trim();
-
-            // Don't process empty messages
             if (string.IsNullOrEmpty(input)) return;
 
-
-            // Show user's message (Using the new bubble method)
             AddUserMessage(input);
             UserInputTextBox.Clear();
             UserInputTextBox.Focus();
-            
-            // CHECK FOR EXIT COMMAND
-            
+
             string lowerInput = input.ToLower();
-            if (lowerInput == "exit" || lowerInput == "quit" || lowerInput == "bye" || lowerInput == "goodbye")
+            if (lowerInput == "exit" || lowerInput == "quit" || lowerInput == "bye")
             {
-                // Use the user's name if we have it, otherwise use a generic greeting
                 string name = string.IsNullOrEmpty(_session.Name) ? "friend" : _session.Name;
-
-                AddBotMessage($"Goodbye, {name}! Thank you for using the Cybersecurity Awareness Bot.");
-                AddBotMessage("Remember: Stay Safe, Stay Secure, Stay Smart!");
-
-                // Wait 2 minutes so the user can read the goodbye message
-                System.Threading.Thread.Sleep(12000);
-
-                // Close the entire application
+                AddBotMessage($"Goodbye, {name}! Remember: Stay Safe, Stay Secure, Stay Smart!");
+                System.Threading.Thread.Sleep(1500);
                 Application.Current.Shutdown();
-
-                return; // Stop processing further code
+                return;
             }
 
-
-            // If name hasn't been set, save it
             if (string.IsNullOrEmpty(_session.Name))
             {
                 _session.Name = input;
-                AddBotMessage($"Welcome, {_session.Name}! You are now connected to the CyberChatbot System.");
-                AddBotMessage(DIVIDER);
-                AddBotMessage($"I can help you with passwords, phishing, safe browsing, and privacy. What would you like to know, {_session.Name}?");
+                AddBotMessage($"Welcome, {_session.Name}! I can help you with passwords, phishing, safe browsing, scams, and privacy.");
             }
             else
             {
-               
                 string tempTopic = _session.FavouriteTopic;
                 string botResponse = _engine.GetResponse(input, _session.Name, ref tempTopic);
-
-                // Save the updated topic back into the session memory
-                _session.FavouriteTopic = tempTopic;
+                _session.FavouriteTopic = tempTopic; 
 
                 AddBotMessage(botResponse);
             }
         }
 
-        // ==================== CHAT BUBBLE METHODS ====================
-
         private void AddUserMessage(string message)
         {
-            // Create the text inside the bubble
-            TextBlock text = new TextBlock
-            {
-                Text = message,
-                Foreground = Brushes.White,
-                TextWrapping = TextWrapping.Wrap,
-                Margin = new Thickness(10, 5, 10, 5)
-            };
-
-            // Create the bubble itself
+            TextBlock text = new TextBlock { Text = message, Foreground = Brushes.White, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(10, 5, 10, 5) };
             Border bubble = new Border
             {
-                Background = new SolidColorBrush(Color.FromRgb(0x3D, 0x27, 0x5E)), // A medium purple
+                Background = new SolidColorBrush(Color.FromRgb(0x3D, 0x27, 0x5E)),
                 CornerRadius = new CornerRadius(10),
-                Margin = new Thickness(80, 5, 0, 5), // Pushes the bubble to the right
+                Margin = new Thickness(80, 5, 0, 5),
                 HorizontalAlignment = HorizontalAlignment.Right,
-                MaxWidth = 400, // Prevents the bubble from getting too wide
+                MaxWidth = 400,
                 Child = text
             };
-
-            // Add the bubble to the chat panel
             ChatStackPanel.Children.Add(bubble);
-
-            // Scroll to the bottom
-            ChatScrollViewer.ScrollToEnd();
+            Dispatcher.BeginInvoke(new Action(() => ChatScrollViewer.ScrollToEnd()));
         }
 
         private void AddBotMessage(string message)
         {
-            // Create the text inside the bubble
-            TextBlock text = new TextBlock
-            {
-                Text = message,
-                Foreground = Brushes.White,
-                TextWrapping = TextWrapping.Wrap,
-                Margin = new Thickness(10, 5, 10, 5)
-            };
-
-            // Create the bubble itself
+            TextBlock text = new TextBlock { Text = message, Foreground = Brushes.White, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(10, 5, 10, 5) };
             Border bubble = new Border
             {
-                Background = new SolidColorBrush(Color.FromRgb(0x1A, 0x10, 0x25)), // A dark navy/purple
+                Background = new SolidColorBrush(Color.FromRgb(0x1A, 0x10, 0x25)),
                 CornerRadius = new CornerRadius(10),
-                Margin = new Thickness(0, 5, 80, 5), // Pushes the bubble to the left
+                Margin = new Thickness(0, 5, 80, 5),
                 HorizontalAlignment = HorizontalAlignment.Left,
                 MaxWidth = 400,
                 Child = text
             };
-
-            // Add the bubble to the chat panel
             ChatStackPanel.Children.Add(bubble);
-
-            // Scroll to the bottom
-            ChatScrollViewer.ScrollToEnd();
+            Dispatcher.BeginInvoke(new Action(() => ChatScrollViewer.ScrollToEnd()));
         }
     }
 }
