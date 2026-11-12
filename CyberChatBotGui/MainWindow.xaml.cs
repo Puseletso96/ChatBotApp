@@ -6,12 +6,13 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace CyberChatBotGui 
+namespace CyberChatBotGui
 {
     public partial class MainWindow : Window
     {
+        private DatabaseHelper _db = new DatabaseHelper();
         private AudioPlayer _audioPlayer = new AudioPlayer();
-        private ChatbotEngine _engine = new ChatbotEngine(); 
+        private ChatbotEngine _engine = new ChatbotEngine();
         private UserSession _session = new UserSession();
         private bool _isLoaded = false;
 
@@ -79,7 +80,7 @@ namespace CyberChatBotGui
             {
                 string tempTopic = _session.FavouriteTopic;
                 string botResponse = _engine.GetResponse(input, _session.Name, ref tempTopic);
-                _session.FavouriteTopic = tempTopic; 
+                _session.FavouriteTopic = tempTopic;
 
                 AddBotMessage(botResponse);
             }
@@ -115,6 +116,11 @@ namespace CyberChatBotGui
             };
             ChatStackPanel.Children.Add(bubble);
             Dispatcher.BeginInvoke(new Action(() => ChatScrollViewer.ScrollToEnd()));
+        }
+    
+     private void RefreshTasks_Click(object sender, RoutedEventArgs e)
+        {
+            TaskListBox.ItemsSource = _db.GetTasks();
         }
     }
 }

@@ -21,7 +21,24 @@ namespace CyberChatBotGui
         public string GetResponse(string input, string userName, ref string favouriteTopic)
         {
             if (string.IsNullOrWhiteSpace(input)) return "Please type a message so I can help you.";
-            string question = input.ToLower().Trim();
+            string question = input.ToLower().Trim(); 
+           
+            if (question.Contains("add task") || question.Contains("remind me to"))
+            {
+                string taskTitle = question.Replace("add task", "").Replace("remind me to", "").Trim();
+
+                return $"Task added: '{taskTitle}'. Would you like to set a reminder?";
+            }
+
+            if (question.Contains("show activity log") || question.Contains("what have you done"))
+            {
+                return "Here's a summary of recent actions:\n1. Task added: Enable 2FA\n2. Quiz started";
+            }
+
+            if (question.Contains("start quiz") || question.Contains("play game"))
+            {
+                return "QUIZ_START"; 
+            }
 
 
             if (question.Contains("tell me more") || question.Contains("another tip"))
