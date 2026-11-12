@@ -85,18 +85,14 @@ namespace CyberChatBotGui
                 return;
             }
 
-            // 3. Pass input to the Chatbot Engine (NLP, Sentiment, Memory)
             string tempTopic = _session.FavouriteTopic;
             string botResponse = _engine.GetResponse(input, _session.Name, ref tempTopic);
             _session.FavouriteTopic = tempTopic;
 
-            // 4. Catch Part 3 Triggers from the Engine
             if (botResponse == "NLP_QUIZ_TRIGGER")
             {
                 AddBotMessage("Starting the Cybersecurity Mini-Game...");
                 _activityLog.AddAction("User started the Quiz");
-
-
                 AddBotMessage("Quiz finished! What else can I help you with?");
                 return;
             }
@@ -109,7 +105,7 @@ namespace CyberChatBotGui
                 _activityLog.AddAction($"Task added: {taskTitle}");
 
                 AddBotMessage($"Task added: '{taskTitle}'. You can view it in the Tasks tab.");
-                TaskListBox.ItemsSource = _db.GetTasks();
+                TaskDataGrid.ItemsSource = _db.GetTasks(); 
                 return;
             }
 
@@ -154,9 +150,55 @@ namespace CyberChatBotGui
             Dispatcher.BeginInvoke(new Action(() => ChatScrollViewer.ScrollToEnd()));
         }
 
-        private void RefreshTasks_Click(object sender, RoutedEventArgs e)
+        private void RefreshTasks_Click(object sender, RoutedEventArgs e) => RefreshTasks();
+
+        private void RefreshTasks()
         {
-            TaskListBox.ItemsSource = _db.GetTasks();
+            TaskDataGrid.ItemsSource = _db.GetTasks(); 
+        }
+
+        private void AddTaskForm_Click(object sender, RoutedEventArgs e)
+        {
+            string title = TaskTitleInput.Text.Trim();
+            string desc = TaskDescInput.Text.Trim();
+            DateTime? reminder = TaskDateInput.SelectedDate;
+
+            if (string.IsNullOrEmpty(title))
+            {
+                MessageBox.Show("Please enter a task title.");
+                return;
+            }
+
+            _db.AddTask(title, desc, reminder);
+            TaskDataGrid.ItemsSource = _db.GetTasks(); 
+            _activityLog.AddAction($"Task added from form: {title}");
+
+            TaskTitleInput.Clear();
+            TaskDescInput.Clear();
+            TaskDateInput.SelectedDate = null;
+        }
+
+        private void CompleteTask_Click(object sender, RoutedEventArgs e)
+        {
+            Button btn = sender as Button;
+            if (btn != null && btn.Tag != null)
+            {
+                int taskId = int.Parse(btn.Tag.ToString());
+                _db.MarkTaskCompleted(taskId); 
+                TaskDataGrid.ItemsSource = _db.GetTasks(); 
+            }
+        }
+
+        // 3. Delete Task
+        private void DeleteTask_Click(object sender, RoutedEventArgs e)
+        {
+            Button btn = sender as Button;
+            if (btn != null && btn.Tag != null)
+            {
+                int taskId = int.Parse(btn.Tag.ToString());
+                _db.DeleteTask(taskId); // Requires method in DatabaseHelper
+                TaskDataGrid.ItemsSource = _db.GetTasks(); // Refresh grid
+            }
         }
     }
 }

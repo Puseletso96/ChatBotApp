@@ -7,8 +7,8 @@ namespace CyberChatBotGui
 {
     internal class DatabaseHelper
     {
+        private string connectionString = "Server=localhost;Database=CyberBotDB;Uid=root;Pwd=Bless_23;";
 
-        private string connectionString = "Server=localhost;Database=CyberBotDB;Uid=root;Pwd=YOUR_MYSQL_PASSWORD;";
         public void AddTask(String title, string description, DateTime? reminder)
         {
             using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -24,6 +24,7 @@ namespace CyberChatBotGui
                 }
             }
         }
+
         public List<TaskItem> GetTasks()
         {
             List<TaskItem> tasks = new List<TaskItem>();
@@ -48,6 +49,34 @@ namespace CyberChatBotGui
                 }
             }
             return tasks;
+        }
+
+        public void MarkTaskCompleted(int taskId)
+        {
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                string query = "UPDATE Tasks SET IsCompleted = 1 WHERE TaskID = @id";
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", taskId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void DeleteTask(int taskId)
+        {
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                string query = "DELETE FROM Tasks WHERE TaskID = @id";
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", taskId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
     }
 }

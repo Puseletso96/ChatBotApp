@@ -57,29 +57,76 @@
                     </ScrollViewer>
                 </TabItem>
 
-                <!-- Tab 2: Tasks -->
+                <!-- Tab 2: Tasks (Updated Layout) -->
                 <TabItem Header="Tasks" Foreground="Black">
                     <Grid Background="#1A1025" Margin="10">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <!-- Left side: Add Task Form -->
+                            <ColumnDefinition Width="300"/>
+                            <!-- Right side: Task List -->
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
-                            <Button Content="Refresh Tasks" Click="RefreshTasks_Click" Margin="0,0,10,0" Padding="5" Background="#FF2E93" Foreground="White" BorderThickness="0"/>
+                        <!-- ===== LEFT PANEL: ADD TASK ===== -->
+                        <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                            <TextBlock Text="Add a Security Task" Foreground="#00E5FF" FontSize="18" FontWeight="Bold" Margin="0,0,0,15"/>
+
+                            <TextBlock Text="Title:" Foreground="White" Margin="0,0,0,5"/>
+                            <TextBox x:Name="TaskTitleInput" Background="#3D275E" Foreground="White" Padding="5" BorderThickness="0" Margin="0,0,0,15"/>
+
+                            <TextBlock Text="Description:" Foreground="White" Margin="0,0,0,5"/>
+                            <TextBox x:Name="TaskDescInput" Background="#3D275E" Foreground="White" Padding="5" BorderThickness="0" Height="60" TextWrapping="Wrap" Margin="0,0,0,15"/>
+
+                            <TextBlock Text="Reminder Date:" Foreground="White" Margin="0,0,0,5"/>
+                            <DatePicker x:Name="TaskDateInput" Background="#3D275E" BorderThickness="0" Margin="0,0,0,20" Padding="5"/>
+
+                            <Button Content="Add Task" Click="AddTaskForm_Click" Background="#00E5FF" Foreground="Black" FontWeight="Bold" Padding="10" BorderThickness="0" Cursor="Hand"/>
                         </StackPanel>
 
-                        <ListBox Grid.Row="1" x:Name="TaskListBox" Background="#2D1B4E" Foreground="White" BorderThickness="0">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Margin="5">
-                                        <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="14" Foreground="#FF2E93"/>
-                                        <TextBlock Text="{Binding Description}" FontSize="12" Foreground="#B8A9D4"/>
-                                        <TextBlock Text="{Binding ReminderDate, StringFormat='Reminder: {0:yyyy-MM-dd}'}" Foreground="White"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
+                        <!-- ===== RIGHT PANEL: DATA GRID ===== -->
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+                                <Button Content="Refresh Tasks" Click="RefreshTasks_Click" Padding="5,2" Background="#3D275E" Foreground="White" BorderThickness="0"/>
+                            </StackPanel>
+
+                            <DataGrid x:Name="TaskDataGrid" Grid.Row="1" AutoGenerateColumns="False" 
+                                      Background="#1A1025" RowBackground="#2D1B4E" AlternatingRowBackground="#3D275E"
+                                      Foreground="White" BorderThickness="0" HeadersVisibility="Column"
+                                      CanUserAddRows="False" IsReadOnly="True">
+                                <DataGrid.Columns>
+                                    <!-- Title Column -->
+                                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*" />
+
+                                    <!-- Status Column -->
+                                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="100" />
+
+                                    <!-- Reminder Column -->
+                                    <DataGridTextColumn Header="Reminder" Binding="{Binding ReminderDate, StringFormat='yyyy-MM-dd HH:mm'}" Width="150" />
+
+                                    <!-- Actions Column (Complete / Delete) -->
+                                    <DataGridTemplateColumn Header="Actions" Width="180">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Button Content="Complete" Background="LightGreen" Foreground="Black" 
+                                                            Margin="0,0,5,0" Padding="5,2" BorderThickness="0" FontWeight="Bold"
+                                                            Click="CompleteTask_Click" Tag="{Binding TaskID}"/>
+
+                                                    <Button Content="Delete" Background="#FF4C4C" Foreground="White" 
+                                                            Padding="5,2" BorderThickness="0" FontWeight="Bold"
+                                                            Click="DeleteTask_Click" Tag="{Binding TaskID}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
                     </Grid>
                 </TabItem>
             </TabControl>
