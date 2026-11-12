@@ -54,7 +54,7 @@ namespace CyberChatBotGui
 
         private void ProcessUserInput()
         {
-            string input = UserInputTextBox.Text?.Trim();
+            string input = UserInputTextBox.Text?.Trim() ?? "";
             if (string.IsNullOrEmpty(input)) return;
 
             AddUserMessage(input);
@@ -62,7 +62,27 @@ namespace CyberChatBotGui
             UserInputTextBox.Focus();
 
             string lowerInput = input.ToLower();
-            if (lowerInput == "exit" || lowerInput == "quit" || lowerInput == "bye")
+            if (lowerInput.Contains("start quiz") || lowerInput.Contains("play game"))
+            {
+                AddBotMessage("Starting the Cybersecurity Mini-Game...");
+                AddBotMessage("Quiz finished! what else Can i help you with?");
+                return;
+
+            }
+            if (lowerInput.Contains("Add task") || lowerInput.Contains("remind me to"))
+            {
+                string taskTitle = input.Replace("add task", "").Replace("remind me to", "").Trim();
+                _db.AddTask(taskTitle, "Added via chat", null);
+                AddBotMessage($"Task added: '{taskTitle}'. You can view in the tasks tab");
+                TaskListBox.ItemsSource = _db.GetTasks();
+                return;
+                if (lowerInput.Contains("show activity log") || lowerInput.Contains("what have you done"))
+                {
+                    AddBotMessage("Here is a summary of recent actions:\n1. Task added: Enable 2FA\n2. Quiz started");
+                    return;
+                }
+                }
+                if (lowerInput == "exit" || lowerInput == "quit" || lowerInput == "bye")
             {
                 string name = string.IsNullOrEmpty(_session.Name) ? "friend" : _session.Name;
                 AddBotMessage($"Goodbye, {name}! Remember: Stay Safe, Stay Secure, Stay Smart!");
