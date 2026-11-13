@@ -1,10 +1,10 @@
 ﻿using CyberChatBotGui;
 using System;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace CyberChatBotGui
 {
@@ -15,6 +15,9 @@ namespace CyberChatBotGui
         private ChatbotEngine _engine = new ChatbotEngine();
         private UserSession _session = new UserSession();
         private ActivityLog _activityLog = new ActivityLog();
+
+        // The Quiz Class instance
+        private Quiz _quiz = new Quiz();
         private bool _isLoaded = false;
 
         public MainWindow()
@@ -28,6 +31,7 @@ namespace CyberChatBotGui
             _isLoaded = true;
 
             _audioPlayer.PlayGreeting();
+            RefreshTasks();
 
             string asciiArt = @" 
    ______      __              _____                      _ __           ___                                                   ____        __ 
@@ -89,23 +93,22 @@ namespace CyberChatBotGui
             string botResponse = _engine.GetResponse(input, _session.Name, ref tempTopic);
             _session.FavouriteTopic = tempTopic;
 
+            // Catch Part 3 Triggers
             if (botResponse == "NLP_QUIZ_TRIGGER")
             {
                 AddBotMessage("Starting the Cybersecurity Mini-Game...");
                 _activityLog.AddAction("User started the Quiz");
-                AddBotMessage("Quiz finished! What else can I help you with?");
+                StartQuiz(); // FIX: Actually call the StartQuiz method!
                 return;
             }
 
             if (botResponse == "NLP_TASK_TRIGGER")
             {
                 string taskTitle = lowerInput.Replace("add task", "").Replace("remind me to", "").Trim();
-
                 _db.AddTask(taskTitle, "Added via chat NLP", null);
                 _activityLog.AddAction($"Task added: {taskTitle}");
-
                 AddBotMessage($"Task added: '{taskTitle}'. You can view it in the Tasks tab.");
-                TaskDataGrid.ItemsSource = _db.GetTasks(); 
+                TaskDataGrid.ItemsSource = _db.GetTasks();
                 return;
             }
 
@@ -150,11 +153,12 @@ namespace CyberChatBotGui
             Dispatcher.BeginInvoke(new Action(() => ChatScrollViewer.ScrollToEnd()));
         }
 
+        // ==================== TASKS TAB METHODS ====================
         private void RefreshTasks_Click(object sender, RoutedEventArgs e) => RefreshTasks();
 
         private void RefreshTasks()
         {
-            TaskDataGrid.ItemsSource = _db.GetTasks(); 
+            TaskDataGrid.ItemsSource = _db.GetTasks();
         }
 
         private void AddTaskForm_Click(object sender, RoutedEventArgs e)
@@ -170,7 +174,7 @@ namespace CyberChatBotGui
             }
 
             _db.AddTask(title, desc, reminder);
-            TaskDataGrid.ItemsSource = _db.GetTasks(); 
+            TaskDataGrid.ItemsSource = _db.GetTasks();
             _activityLog.AddAction($"Task added from form: {title}");
 
             TaskTitleInput.Clear();
@@ -184,21 +188,93 @@ namespace CyberChatBotGui
             if (btn != null && btn.Tag != null)
             {
                 int taskId = int.Parse(btn.Tag.ToString());
-                _db.MarkTaskCompleted(taskId); 
-                TaskDataGrid.ItemsSource = _db.GetTasks(); 
+                _db.MarkTaskCompleted(taskId);
+                TaskDataGrid.ItemsSource = _db.GetTasks();
             }
         }
 
-        // 3. Delete Task
         private void DeleteTask_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
             if (btn != null && btn.Tag != null)
             {
                 int taskId = int.Parse(btn.Tag.ToString());
-                _db.DeleteTask(taskId); // Requires method in DatabaseHelper
-                TaskDataGrid.ItemsSource = _db.GetTasks(); // Refresh grid
+                _db.DeleteTask(taskId);
             }
+        }
+
+        // ==================== QUIZ TAB METHODS (Using the Quiz Class) ====================
+        private void StartQuiz()
+        {
+            _quiz = new Quiz(); // Reset the quiz logic
+            QuizPanel.Visibility = Visibility.Visible;
+            ChatScrollViewer.Visibility = Visibility.Collapsed;
+            QuizCloseBtn.Visibility = Visibility.Collapsed;
+            ShowQuestion();
+        }
+
+        private void ShowQuestion()
+        {
+            if (_quiz.IsFinished())
+            {
+                QuizQuestionText.Text = "Quiz Complete!";
+                QuizBtnA.Visibility = Visibility.Collapsed;
+                QuizBtnB.Visibility = Visibility.Collapsed;
+                QuizBtnC.Visibility = Visibility.Collapsed;
+                QuizBtnD.Visibility = Visibility.Collapsed;
+                QuizFeedbackText.Text = "";
+                QuizScoreText.Text = $"Final Score: {_quiz.Score} / {_quiz.TotalQuestions()}";
+                QuizCloseBtn.Visibility = Visibility.Visible;
+                return;
+            }
+
+            var q = _quiz.GetCurrentQuestion();
+            QuizQuestionText.Text = q.QuestionText;
+
+            QuizBtnA.Content = q.Options[0]; QuizBtnA.Visibility = Visibility.Visible; QuizBtnA.IsEnabled = true;
+            QuizBtnB.Content = q.Options[1]; QuizBtnB.Visibility = Visibility.Visible; QuizBtnB.IsEnabled = true;
+            QuizBtnC.Content = q.Options[2]; QuizBtnC.Visibility = Visibility.Visible; QuizBtnC.IsEnabled = true;
+            QuizBtnD.Content = q.Options[3]; QuizBtnD.Visibility = Visibility.Visible; QuizBtnD.IsEnabled = true;
+
+            QuizFeedbackText.Text = "";
+            QuizScoreText.Text = $"Current Score: {_quiz.Score}";
+        }
+
+        private void QuizAnswer_Click(object sender, RoutedEventArgs e)
+        {
+            Button btn = sender as Button;
+            int selectedIndex = int.Parse(btn.Tag.ToString());
+
+            if (_quiz.CheckAnswer(selectedIndex))
+            {
+                QuizFeedbackText.Text = "Correct!";
+                QuizFeedbackText.Foreground = Brushes.LightGreen;
+            }
+            else
+            {
+                QuizFeedbackText.Text = $"Incorrect. The answer was {_quiz.GetCurrentQuestion().Options[_quiz.GetCurrentQuestion().CorrectAnswerIndex]}";
+                QuizFeedbackText.Foreground = Brushes.Red;
+            }
+
+            QuizBtnA.IsEnabled = false; QuizBtnB.IsEnabled = false;
+            QuizBtnC.IsEnabled = false; QuizBtnD.IsEnabled = false;
+
+            var timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1.5);
+            timer.Tick += (s, ev) =>
+            {
+                timer.Stop();
+                _quiz.MoveToNextQuestion();
+                ShowQuestion();
+            };
+            timer.Start();
+        }
+
+        private void QuizClose_Click(object sender, RoutedEventArgs e)
+        {
+            QuizPanel.Visibility = Visibility.Collapsed;
+            ChatScrollViewer.Visibility = Visibility.Visible;
+            AddBotMessage("You returned from the quiz. What else can I help you with?");
         }
     }
 }

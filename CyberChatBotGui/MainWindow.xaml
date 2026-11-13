@@ -52,12 +52,35 @@
 
                 <!-- Tab 1: The Chat -->
                 <TabItem Header="Chatbot" Foreground="Black">
-                    <ScrollViewer x:Name="ChatScrollViewer" VerticalScrollBarVisibility="Auto" Background="#1A1025">
-                        <StackPanel x:Name="ChatStackPanel" Margin="10"/>
-                    </ScrollViewer>
+                    <Grid Background="#1A1025">
+                        <!-- The Chat Interface -->
+                        <ScrollViewer x:Name="ChatScrollViewer" VerticalScrollBarVisibility="Auto">
+                            <StackPanel x:Name="ChatStackPanel" Margin="10"/>
+                        </ScrollViewer>
+
+                        <!-- The Quiz Interface (Hidden by default) -->
+                        <Grid x:Name="QuizPanel" Visibility="Collapsed" Background="#1A1025" Margin="20">
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="600">
+
+                                <TextBlock Text="Cybersecurity Mini-Game" Foreground="#FF2E93" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+
+                                <TextBlock x:Name="QuizQuestionText" Foreground="White" FontSize="18" FontWeight="Bold" TextWrapping="Wrap" Margin="0,0,0,20" TextAlignment="Center"/>
+
+                                <Button x:Name="QuizBtnA" Content="Option A" Margin="0,5" Padding="10" Background="#3D275E" Foreground="White" BorderThickness="0" Click="QuizAnswer_Click" Tag="0"/>
+                                <Button x:Name="QuizBtnB" Content="Option B" Margin="0,5" Padding="10" Background="#3D275E" Foreground="White" BorderThickness="0" Click="QuizAnswer_Click" Tag="1"/>
+                                <Button x:Name="QuizBtnC" Content="Option C" Margin="0,5" Padding="10" Background="#3D275E" Foreground="White" BorderThickness="0" Click="QuizAnswer_Click" Tag="2"/>
+                                <Button x:Name="QuizBtnD" Content="Option D" Margin="0,5" Padding="10" Background="#3D275E" Foreground="White" BorderThickness="0" Click="QuizAnswer_Click" Tag="3"/>
+
+                                <TextBlock x:Name="QuizFeedbackText" Foreground="#A6E3A1" FontSize="16" FontWeight="Bold" Margin="0,20,0,0" TextAlignment="Center"/>
+                                <TextBlock x:Name="QuizScoreText" Foreground="#FF2E93" FontSize="18" Margin="0,10,0,0" TextAlignment="Center"/>
+
+                                <Button x:Name="QuizCloseBtn" Content="Return to Chat" Margin="0,20,0,0" Padding="10" Background="#FF2E93" Foreground="White" BorderThickness="0" Click="QuizClose_Click" Visibility="Collapsed"/>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
                 </TabItem>
 
-                <!-- Tab 2: Tasks (Updated Layout) -->
+                <!-- Tab 2: Tasks -->
                 <TabItem Header="Tasks" Foreground="Black">
                     <Grid Background="#1A1025" Margin="10">
                         <Grid.ColumnDefinitions>
@@ -94,21 +117,27 @@
                                 <Button Content="Refresh Tasks" Click="RefreshTasks_Click" Padding="5,2" Background="#3D275E" Foreground="White" BorderThickness="0"/>
                             </StackPanel>
 
+                            <!-- FIXED DATAGRID WITH VISIBLE HEADERS -->
                             <DataGrid x:Name="TaskDataGrid" Grid.Row="1" AutoGenerateColumns="False" 
                                       Background="#1A1025" RowBackground="#2D1B4E" AlternatingRowBackground="#3D275E"
-                                      Foreground="White" BorderThickness="0" HeadersVisibility="Column"
+                                      Foreground="White" BorderThickness="0" 
                                       CanUserAddRows="False" IsReadOnly="True">
+
+                                <DataGrid.Resources>
+                                    <!-- This fixes the invisible white headers -->
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="Background" Value="#3D275E"/>
+                                        <Setter Property="Foreground" Value="#00E5FF"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                        <Setter Property="Padding" Value="5"/>
+                                    </Style>
+                                </DataGrid.Resources>
+
                                 <DataGrid.Columns>
-                                    <!-- Title Column -->
                                     <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*" />
-
-                                    <!-- Status Column -->
                                     <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="100" />
-
-                                    <!-- Reminder Column -->
                                     <DataGridTextColumn Header="Reminder" Binding="{Binding ReminderDate, StringFormat='yyyy-MM-dd HH:mm'}" Width="150" />
 
-                                    <!-- Actions Column (Complete / Delete) -->
                                     <DataGridTemplateColumn Header="Actions" Width="180">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
