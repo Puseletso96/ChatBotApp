@@ -140,6 +140,57 @@ The bot detects the user's emotional tone and adjusts its response accordingly:
 1. Clone this repository to your local machine:
    ```bash
    git clone https://github.com/Puseletso96/ChatBotApp.git
+
+   ---
+
+##  Part 3: Advanced POE Features (Final Submission)
+
+### Project Description
+Part 3 completes the Cybersecurity Awareness Chatbot by adding advanced features that make it more engaging, educational, and interactive. It introduces a Task Assistant with database storage, a Mini-Game Quiz, Natural Language Processing (NLP) simulation, and an Activity Log.
+
+### Part 3 Features Implemented
+
+#### 1. Task Assistant with MySQL Database
+- Users can add cybersecurity-related tasks (Title, Description, Reminder Date) via a form in the GUI.
+- Tasks are saved to a MySQL database (`CyberBotDB`).
+- Users can view tasks in a DataGrid, mark them as **Completed**, or **Delete** them.
+- All database actions are handled securely via the `DatabaseHelper` class using `MySqlConnector`.
+
+#### 2. Cybersecurity Mini-Game (Quiz)
+- An interactive 13-question quiz covering topics like phishing, passwords, and safe browsing.
+- Features multiple-choice questions with immediate feedback (Correct/Incorrect).
+- Tracks the user's score and provides final feedback (e.g., *"Great job! You're a cybersecurity pro!"* or *"Keep learning to stay safe online!"*).
+- Built using Object-Oriented Programming (OOP) in a separate `Quiz` class.
+
+#### 3. Natural Language Processing (NLP) Simulation
+- The chatbot uses basic string manipulation (`Contains()`) to understand user intent without requiring exact phrasing.
+- For example, typing "add task update password" or "remind me to update password" triggers the same Task Assistant feature.
+- Typing "start quiz" or "play game" automatically switches to the Quiz tab.
+- The bot is flexible enough to recognise various ways of phrasing the same request.
+
+#### 4. Activity Log
+- A dedicated log that tracks user and bot actions (Tasks added, Quiz started, etc.).
+- Users can view the log by typing "show activity log" or "what have you done" in the chat.
+- The log stores the last 10 actions with timestamps.
+
+### How to Run Part 3 (Database Setup)
+
+#### Prerequisites
+- MySQL Server and MySQL Workbench installed
+- MySqlConnector NuGet Package installed in Visual Studio
+
+#### Steps to Set Up the Database
+1. Open MySQL Workbench and create a database named `CyberBotDB`.
+2. Run the following SQL script to create the Tasks table:
+   ```sql
+   USE CyberBotDB;
+   CREATE TABLE IF NOT EXISTS Tasks (
+       TaskID INT AUTO_INCREMENT PRIMARY KEY,
+       Title VARCHAR(100) NOT NULL,
+       Description TEXT,
+       ReminderDate DATETIME,
+       IsCompleted BOOLEAN DEFAULT FALSE
+   );
  ## Author
 
  - Tshesana Puseletso
