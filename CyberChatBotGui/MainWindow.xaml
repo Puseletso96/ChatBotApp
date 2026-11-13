@@ -48,35 +48,14 @@
 
         <!-- ==================== MAIN CONTENT (TABS) ==================== -->
         <Border Grid.Row="1" Background="#2D1B4E" CornerRadius="10" Padding="10" Margin="0,0,0,10">
-            <TabControl Background="Transparent" BorderThickness="0">
+            <TabControl x:Name="MainTabControl" Background="Transparent" BorderThickness="0">
 
                 <!-- Tab 1: The Chat -->
                 <TabItem Header="Chatbot" Foreground="Black">
                     <Grid Background="#1A1025">
-                        <!-- The Chat Interface -->
                         <ScrollViewer x:Name="ChatScrollViewer" VerticalScrollBarVisibility="Auto">
                             <StackPanel x:Name="ChatStackPanel" Margin="10"/>
                         </ScrollViewer>
-
-                        <!-- The Quiz Interface (Hidden by default) -->
-                        <Grid x:Name="QuizPanel" Visibility="Collapsed" Background="#1A1025" Margin="20">
-                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="600">
-
-                                <TextBlock Text="Cybersecurity Mini-Game" Foreground="#FF2E93" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
-
-                                <TextBlock x:Name="QuizQuestionText" Foreground="White" FontSize="18" FontWeight="Bold" TextWrapping="Wrap" Margin="0,0,0,20" TextAlignment="Center"/>
-
-                                <Button x:Name="QuizBtnA" Content="Option A" Margin="0,5" Padding="10" Background="#3D275E" Foreground="White" BorderThickness="0" Click="QuizAnswer_Click" Tag="0"/>
-                                <Button x:Name="QuizBtnB" Content="Option B" Margin="0,5" Padding="10" Background="#3D275E" Foreground="White" BorderThickness="0" Click="QuizAnswer_Click" Tag="1"/>
-                                <Button x:Name="QuizBtnC" Content="Option C" Margin="0,5" Padding="10" Background="#3D275E" Foreground="White" BorderThickness="0" Click="QuizAnswer_Click" Tag="2"/>
-                                <Button x:Name="QuizBtnD" Content="Option D" Margin="0,5" Padding="10" Background="#3D275E" Foreground="White" BorderThickness="0" Click="QuizAnswer_Click" Tag="3"/>
-
-                                <TextBlock x:Name="QuizFeedbackText" Foreground="#A6E3A1" FontSize="16" FontWeight="Bold" Margin="0,20,0,0" TextAlignment="Center"/>
-                                <TextBlock x:Name="QuizScoreText" Foreground="#FF2E93" FontSize="18" Margin="0,10,0,0" TextAlignment="Center"/>
-
-                                <Button x:Name="QuizCloseBtn" Content="Return to Chat" Margin="0,20,0,0" Padding="10" Background="#FF2E93" Foreground="White" BorderThickness="0" Click="QuizClose_Click" Visibility="Collapsed"/>
-                            </StackPanel>
-                        </Grid>
                     </Grid>
                 </TabItem>
 
@@ -84,13 +63,11 @@
                 <TabItem Header="Tasks" Foreground="Black">
                     <Grid Background="#1A1025" Margin="10">
                         <Grid.ColumnDefinitions>
-                            <!-- Left side: Add Task Form -->
                             <ColumnDefinition Width="300"/>
-                            <!-- Right side: Task List -->
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- ===== LEFT PANEL: ADD TASK ===== -->
+                        <!-- LEFT PANEL: ADD TASK -->
                         <StackPanel Grid.Column="0" Margin="0,0,20,0">
                             <TextBlock Text="Add a Security Task" Foreground="#00E5FF" FontSize="18" FontWeight="Bold" Margin="0,0,0,15"/>
 
@@ -106,7 +83,7 @@
                             <Button Content="Add Task" Click="AddTaskForm_Click" Background="#00E5FF" Foreground="Black" FontWeight="Bold" Padding="10" BorderThickness="0" Cursor="Hand"/>
                         </StackPanel>
 
-                        <!-- ===== RIGHT PANEL: DATA GRID ===== -->
+                        <!-- RIGHT PANEL: DATA GRID -->
                         <Grid Grid.Column="1">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -117,14 +94,12 @@
                                 <Button Content="Refresh Tasks" Click="RefreshTasks_Click" Padding="5,2" Background="#3D275E" Foreground="White" BorderThickness="0"/>
                             </StackPanel>
 
-                            <!-- FIXED DATAGRID WITH VISIBLE HEADERS -->
                             <DataGrid x:Name="TaskDataGrid" Grid.Row="1" AutoGenerateColumns="False" 
                                       Background="#1A1025" RowBackground="#2D1B4E" AlternatingRowBackground="#3D275E"
                                       Foreground="White" BorderThickness="0" 
                                       CanUserAddRows="False" IsReadOnly="True">
 
                                 <DataGrid.Resources>
-                                    <!-- This fixes the invisible white headers -->
                                     <Style TargetType="DataGridColumnHeader">
                                         <Setter Property="Background" Value="#3D275E"/>
                                         <Setter Property="Foreground" Value="#00E5FF"/>
@@ -156,6 +131,31 @@
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Grid>
+                    </Grid>
+                </TabItem>
+
+                <!-- Tab 3: The Quiz (NEW TAB) -->
+                <TabItem Header="Quiz" Foreground="Black">
+                    <Grid Background="#1A1025" Margin="10">
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="600">
+
+                            <TextBlock Text="Cybersecurity Mini-Game" Foreground="#FF2E93" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+
+                            <TextBlock x:Name="QuizQuestionText" Foreground="White" FontSize="18" FontWeight="Bold" TextWrapping="Wrap" Margin="0,0,0,20" TextAlignment="Center" Text="Click 'Start Quiz' to test your knowledge!"/>
+
+                            <Button x:Name="QuizBtnA" Content="Option A" Margin="0,5" Padding="10" Background="#3D275E" Foreground="White" BorderThickness="0" Click="QuizAnswer_Click" Tag="0" Visibility="Collapsed"/>
+                            <Button x:Name="QuizBtnB" Content="Option B" Margin="0,5" Padding="10" Background="#3D275E" Foreground="White" BorderThickness="0" Click="QuizAnswer_Click" Tag="1" Visibility="Collapsed"/>
+                            <Button x:Name="QuizBtnC" Content="Option C" Margin="0,5" Padding="10" Background="#3D275E" Foreground="White" BorderThickness="0" Click="QuizAnswer_Click" Tag="2" Visibility="Collapsed"/>
+                            <Button x:Name="QuizBtnD" Content="Option D" Margin="0,5" Padding="10" Background="#3D275E" Foreground="White" BorderThickness="0" Click="QuizAnswer_Click" Tag="3" Visibility="Collapsed"/>
+
+                            <TextBlock x:Name="QuizFeedbackText" Foreground="#A6E3A1" FontSize="16" FontWeight="Bold" Margin="0,20,0,0" TextAlignment="Center"/>
+                            <TextBlock x:Name="QuizScoreText" Foreground="#FF2E93" FontSize="18" Margin="0,10,0,0" TextAlignment="Center"/>
+
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+                                <Button x:Name="QuizStartBtn" Content="Start Quiz" Padding="15,5" Background="#00E5FF" Foreground="Black" FontWeight="Bold" BorderThickness="0" Click="QuizStartBtn_Click" Margin="0,0,10,0"/>
+                                <Button x:Name="QuizResetBtn" Content="Reset Quiz" Padding="15,5" Background="#FF2E93" Foreground="White" BorderThickness="0" Click="QuizResetBtn_Click" Visibility="Collapsed"/>
+                            </StackPanel>
+                        </StackPanel>
                     </Grid>
                 </TabItem>
             </TabControl>

@@ -5,15 +5,14 @@ namespace CyberChatBotGui
 {
     public class Quiz
     {
-        
         public class QuizQuestion
         {
-            public string QuestionText { get; set; }
-            public string[] Options { get; set; }
+            public string QuestionText { get; set; } = string.Empty;
+            public string[] Options { get; set; } = Array.Empty<string>();
             public int CorrectAnswerIndex { get; set; }
         }
 
-        private List<QuizQuestion> _questions;
+        private List<QuizQuestion> _questions = new List<QuizQuestion>();
         private int _currentQuestionIndex;
         public int Score { get; private set; }
 
@@ -71,6 +70,23 @@ namespace CyberChatBotGui
         public int TotalQuestions()
         {
             return _questions.Count;
+        }
+
+        
+        public string GetFinalFeedback()
+        {        
+            if (Score >= 10)
+            {
+                return "Great job! You're a cybersecurity pro!";
+            }
+            else if (Score >= 6)
+            {
+                return "Good effort! Keep brushing up on your skills to stay safe online.";
+            }
+            else
+            {
+                return "Keep learning to stay safe online! Review the tips and try again.";
+            }
         }
     }
 }

@@ -31,7 +31,7 @@ namespace CyberChatBotGui
             _isLoaded = true;
 
             _audioPlayer.PlayGreeting();
-            RefreshTasks();
+            // RefreshTasks(); // Uncomment this once your database is fully set up
 
             string asciiArt = @" 
    ______      __              _____                      _ __           ___                                                   ____        __ 
@@ -59,8 +59,6 @@ namespace CyberChatBotGui
                 ProcessUserInput();
             }
         }
-
-        private void VoiceButton_Click(object sender, RoutedEventArgs e) => _audioPlayer.PlayGreeting();
 
         private void ProcessUserInput()
         {
@@ -98,7 +96,7 @@ namespace CyberChatBotGui
             {
                 AddBotMessage("Starting the Cybersecurity Mini-Game...");
                 _activityLog.AddAction("User started the Quiz");
-                StartQuiz(); // FIX: Actually call the StartQuiz method!
+                StartQuiz();
                 return;
             }
 
@@ -200,17 +198,37 @@ namespace CyberChatBotGui
             {
                 int taskId = int.Parse(btn.Tag.ToString());
                 _db.DeleteTask(taskId);
+                TaskDataGrid.ItemsSource = _db.GetTasks(); // Refresh the grid after deletion
             }
         }
 
-        // ==================== QUIZ TAB METHODS (Using the Quiz Class) ====================
+        // ==================== QUIZ TAB METHODS ====================
         private void StartQuiz()
         {
-            _quiz = new Quiz(); // Reset the quiz logic
-            QuizPanel.Visibility = Visibility.Visible;
-            ChatScrollViewer.Visibility = Visibility.Collapsed;
-            QuizCloseBtn.Visibility = Visibility.Collapsed;
+            _quiz = new Quiz();
+            MainTabControl.SelectedIndex = 2; // Switch to the Quiz tab automatically
+            QuizStartBtn.Visibility = Visibility.Collapsed;
+            QuizResetBtn.Visibility = Visibility.Collapsed;
             ShowQuestion();
+        }
+
+        private void QuizStartBtn_Click(object sender, RoutedEventArgs e)
+        {
+            StartQuiz();
+        }
+
+        private void QuizResetBtn_Click(object sender, RoutedEventArgs e)
+        {
+            _quiz = new Quiz();
+            QuizQuestionText.Text = "Click 'Start Quiz' to test your knowledge!";
+            QuizFeedbackText.Text = "";
+            QuizScoreText.Text = "";
+            QuizBtnA.Visibility = Visibility.Collapsed;
+            QuizBtnB.Visibility = Visibility.Collapsed;
+            QuizBtnC.Visibility = Visibility.Collapsed;
+            QuizBtnD.Visibility = Visibility.Collapsed;
+            QuizStartBtn.Visibility = Visibility.Visible;
+            QuizResetBtn.Visibility = Visibility.Collapsed;
         }
 
         private void ShowQuestion()
@@ -224,7 +242,7 @@ namespace CyberChatBotGui
                 QuizBtnD.Visibility = Visibility.Collapsed;
                 QuizFeedbackText.Text = "";
                 QuizScoreText.Text = $"Final Score: {_quiz.Score} / {_quiz.TotalQuestions()}";
-                QuizCloseBtn.Visibility = Visibility.Visible;
+                QuizResetBtn.Visibility = Visibility.Visible;
                 return;
             }
 
@@ -243,6 +261,8 @@ namespace CyberChatBotGui
         private void QuizAnswer_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
+            if (btn == null || btn.Tag == null) return;
+
             int selectedIndex = int.Parse(btn.Tag.ToString());
 
             if (_quiz.CheckAnswer(selectedIndex))
@@ -268,13 +288,6 @@ namespace CyberChatBotGui
                 ShowQuestion();
             };
             timer.Start();
-        }
-
-        private void QuizClose_Click(object sender, RoutedEventArgs e)
-        {
-            QuizPanel.Visibility = Visibility.Collapsed;
-            ChatScrollViewer.Visibility = Visibility.Visible;
-            AddBotMessage("You returned from the quiz. What else can I help you with?");
         }
     }
 }
